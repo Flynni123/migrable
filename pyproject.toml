@@ -1,0 +1,60 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "migrable"
+version = "0.1.0"
+description = "Repeatable file-to-database migrations with a terminal UI."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Migrable contributors" }]
+dependencies = [
+  "PyYAML>=6.0.2",
+  "textual>=1.0.0",
+]
+
+[project.optional-dependencies]
+excel = ["openpyxl>=3.1.5"]
+dev = [
+  "build>=1.2",
+  "hatchling>=1.27",
+  "mypy>=1.13",
+  "pytest>=8.3",
+  "ruff>=0.8",
+  "types-PyYAML>=6.0.12.20241230",
+]
+
+[project.scripts]
+migrable = "migrable.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/migrable"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["migrable"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src"]
+check_untyped_defs = true
+disallow_any_generics = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = ["openpyxl", "openpyxl.*"]
+ignore_missing_imports = true
