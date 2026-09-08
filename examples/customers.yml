@@ -1,0 +1,27 @@
+version: 1
+name: import-customers
+source:
+  kind: csv
+  path: ./customers.csv
+target:
+  kind: sqlite
+  path: ./application.db
+  dataset: customers
+  mode: upsert
+mapping:
+  - target: customer_id
+    source: Customer Number
+    type: integer
+    primary_key: true
+  - target: name
+    source: Full Name
+    transforms: [trim]
+  - target: email
+    source: Email
+    transforms: [trim, lowercase]
+  - target: active
+    value: true
+    type: boolean
+options:
+  batch_size: 1000
+  on_error: report_and_skip
